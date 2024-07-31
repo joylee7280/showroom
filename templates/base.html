@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  {% load static %}
+  <link href="{% static 'css/style.css'%}" rel="stylesheet">
+  <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+  <!-- js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+  <header>
+    <h1>Aurotek showroom</h1>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          Pudu
+        </button>
+        <!-- 代辦：更新為現在可以偵測到的機器人 -->
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item" href="bella">喵喵</a></li>
+          <li><a class="dropdown-item" href="pudubot">Pudubot</a></li>
+          <li><a class="dropdown-item" href="hola">拉拉</a></li>
+        </ul>
+    </div>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+          Reeman
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+          <li><a class="dropdown-item" href="dog">大狗</a></li>
+          <li><a class="dropdown-item" href="boat">飛船</a></li>
+        </ul>
+    </div>
+  </header>
+  
+  <main>
+    {% block main %}{% endblock %}
+  </main>
+  
+  <footer>
+    <h2>主頁結尾</h2>
+  </footer>
+</body>
+</html>
