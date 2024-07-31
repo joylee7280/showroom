@@ -1,0 +1,23 @@
+header {
+    padding: 10px;
+    text-align: center;
+    background: #d60029;
+    color: white;
+    font-size: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  footer {
+    padding: 20px;
+    text-align: center;
+    color: white;
+    background-color: indigo;
+  }
+  
+  main {
+    margin: 0 auto;
+    padding: 18px;
+  }
+  
+  .info {color:red;}

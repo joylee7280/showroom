@@ -1,0 +1,15 @@
+{% extends 'base.html'%}
+
+{% block title %}使用者登入{% endblock %}
+
+{% block main %}
+    <h1>使用者登入</h1>
+    <form action="/login/" method="post">
+        {% csrf_token %}
+        <label for="uName">名稱：</label>
+        <input id="uName" type="text" name="uName">
+        <label for="uPass">密碼：</label>
+        <input id="uPass" type="text" name="uPass">
+        <input type="submit" value="送出">
+    </form>
+{% endblock %}
