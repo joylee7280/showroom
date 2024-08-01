@@ -21,12 +21,12 @@ from showroom_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
-    path('robot',views.robot),
-    path('bella',views.bella),
-    path('pudubot',views.pudubot),
-    path('hola',views.hola),
-    path('boat',views.boat),
-    path('dog',views.dog),
+    path('robot/',views.robot),
+    path('bella/',views.bella),
+    path('pudubot/',views.pudubot),
+    path('hola/',views.hola),
+    path('boat/',views.boat),
+    path('dog/',views.dog),
     # path(r'^admin/', admin.site.urls),
     # path(r'^$', sayhello),
 ]

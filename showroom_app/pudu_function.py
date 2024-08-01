@@ -37,15 +37,14 @@ def obtain_robot_destination_on_map(device_id,robot_id):
     web = requests.get(url="http://127.0.0.1:9050/api/destinations?device="+device_id+"&robot_id="+robot_id+"&page_size=200&page_index=1")
     result = json.loads(web.text)
     # print(result)
-    global destList_total,destList
+    destList = []
     # print(result)
     if "data" in result:
       print("here")
       destList_total = pd.DataFrame(result['data']['destinations'])
       for i in range(0,len(result['data']['destinations'])):
         destList.append(result['data']['destinations'][i]['name'])
-      print(destList)
-    return destList
+    return destList_total,destList
 def register_notification_address():
   return("")
 def query_status_of_robots_in_a_group(device_id,group_id):
@@ -78,7 +77,7 @@ def obtain_status_of_robot(device_id,robot_id):
     pos_list = "x:"+str(now_state['data']['robotPose']["x"])+" y:"+str(now_state['data']['robotPose']["y"])+" theta:"+str(now_state['data']['robotPose']["angle"])
     pos = pos_list
     return now_state
-def call_robot_from_a_destination_on_map(device_id,robot_id,dest):
+def call_robot_from_a_destination_on_map(device_id,robot_id,dest,destList_total):
     type_name = destList_total.loc[destList_total['name']==dest]['type'].values[0]
     params={
     "deviceId": device_id,
@@ -89,7 +88,7 @@ def call_robot_from_a_destination_on_map(device_id,robot_id,dest):
     }
     }
     web = requests.post(url="http://127.0.0.1:9050/api/robot/call",json=params)
-def cancel_task_from_a_destination_on_map(device_id,robot_id,dest):
+def cancel_task_from_a_destination_on_map(device_id,robot_id,dest,destList_total):
   type_name = destList_total.loc[destList_total['name']==dest]['type'].values[0]
   params={
   "deviceId": device_id,
