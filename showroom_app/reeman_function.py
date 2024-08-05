@@ -43,9 +43,8 @@ def get_robotlist(token):
     for i in range(0,len(result["data"]["data"])):
         robotlist.setdefault(result["data"]["data"][i]["remark"],result["data"]["data"][i]["urlId"])
     print(robotlist)
-    return web.text
+    return robotlist
 
-get_robotlist(get_token())
 
 def get_pose():
     web = requests.get("http://"+host+"/reeman/pose")
@@ -69,7 +68,7 @@ def get_power():
     elif(charge_result==2):
        chargestage.set("Charging")
     return web.text
-def get_position():
+def get_position(host):
     web =  requests.get("http://"+host+"/reeman/position")
     result = json.loads(web.text)
     global destList_total
@@ -78,7 +77,7 @@ def get_position():
     destList = []
     for i in range(0,len(result['waypoints'])):
       destList.append(result['waypoints'][i]['name'])
-    return destList
+    return destList_total,destList
 # 發送目標名稱導航
 def post_destname(dest):
     print(dest)
@@ -90,7 +89,7 @@ def post_destname(dest):
     web = requests.post("http://"+host+"/cmd/nav_name",json=body)
     print("finish")
 # 取消導航
-def post_cancel_nav():
+def post_cancel_nav(host):
     web =  requests.post("http://"+host+"/cmd/cancel_goal")
     return web.text
 # 獲取導航狀態

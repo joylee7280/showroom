@@ -58,24 +58,9 @@ def get_status_of_robots_in_a_group(device_id,group_id):
     web = requests.get("http://127.0.0.1:9050/api/robot/state?device_id="+device_id+"&group_id="+group_id+"&timeout=10&count=5")
     return web.text
 def obtain_status_of_robot(device_id,robot_id):
-    print("//////////////")
-    print(device_id)
-    print(robot_id)
     web = requests.get("http://127.0.0.1:9050/api/robot/status?device_id="+device_id+"&robot_id="+robot_id)
-    print(web.text)
-    # global state,power,chargestage,movestate,chargestage,pos
     now_state = json.loads(web.text)
-    # print(now_state)
-    state = now_state['data']['robotState']
-    power = now_state['data']['robotPower']
-    chargestage = now_state['data']['chargeStage']
-    movestate = now_state['data']['moveState']
-    # pos.set(now_state['data']['robotPose'])
-    now_state['data']['robotPose']["x"]=round(now_state['data']['robotPose']["x"],2)
-    now_state['data']['robotPose']["y"]=round(now_state['data']['robotPose']["y"],2)
-    now_state['data']['robotPose']["angle"]=round(now_state['data']['robotPose']["angle"],2)
-    pos_list = "x:"+str(now_state['data']['robotPose']["x"])+" y:"+str(now_state['data']['robotPose']["y"])+" theta:"+str(now_state['data']['robotPose']["angle"])
-    pos = pos_list
+    now_state = web.text
     return now_state
 def call_robot_from_a_destination_on_map(device_id,robot_id,dest,destList_total):
     type_name = destList_total.loc[destList_total['name']==dest]['type'].values[0]
