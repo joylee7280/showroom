@@ -1,0 +1,68 @@
+{% extends "base.html"%}
+
+{% block title %}{{name}}{% endblock %}
+
+{% block main %}
+{% load static %}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <!-- <p>喵喵</p> -->
+    
+    <!-- 設定圖片 -->
+<span>
+    <img src="{% static 'Image/bella.png'%}" width = 200>
+    <img src="{% static 'Image/pudubot2.png'%}" width = 200>
+    <img src="{% static 'Image/hola.png'%}" width = 200>
+</span>
+<span>
+    <input type = "button" id = "button_goback" value = "返航">
+    <input type = "button" id = "button_charge" value = "充電">
+
+</span>
+    <script>
+        $(function(){
+            $("#button_goback").click(function(e){
+                e.preventDefault
+                var formdata = new FormData();
+                formdata.append("order","goback")
+                $.ajax({
+                    url:"/pudu/",
+                    type:"post",
+                    data:formdata,
+                    processData:false,
+                    contentType:false,
+                    success:function(response){
+                        // alert("success")
+                    },
+                    error:function(){
+                        alert("失敗")
+                    }
+
+                })
+            })
+
+            $("#button_charge").click(function(e){
+                e.preventDefault
+                var formdata = new FormData();
+                formdata.append("order","charge")
+                $.ajax({
+                    url:"/pudu/",
+                    type:"post",
+                    data:formdata,
+                    processData:false,
+                    contentType:false,
+                    success:function(response){
+                        // alert("success")
+                    },
+                    error:function(){
+                        alert("失敗")
+                    }
+
+                })
+            })    
+        })
+    </script>
+</body>
+{% endblock %}

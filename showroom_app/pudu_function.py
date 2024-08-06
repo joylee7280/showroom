@@ -56,7 +56,8 @@ def query_status_of_robots_in_a_group(device_id,group_id):
     return web.text
 def get_status_of_robots_in_a_group(device_id,group_id):
     web = requests.get("http://127.0.0.1:9050/api/robot/state?device_id="+device_id+"&group_id="+group_id+"&timeout=10&count=5")
-    return web.text
+    robot_group = json.loads(web.text)
+    return robot_group
 def obtain_status_of_robot(device_id,robot_id):
     web = requests.get("http://127.0.0.1:9050/api/robot/status?device_id="+device_id+"&robot_id="+robot_id)
     now_state = json.loads(web.text)

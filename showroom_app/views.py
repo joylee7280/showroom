@@ -33,6 +33,10 @@ def robot(request):
             now_state = obtain_status_of_robot(device_id,robot_id)
             now_state = json.loads(now_state)
             return JsonResponse(now_state, safe=False)
+        if "image" in request.POST.keys():
+            path = "/static/Image/"+name+".png"
+            print(path)
+            return HttpResponse(path)
         if "order" in request.POST.keys():
             dest = request.POST["dest"]
             if robot_type == "pudu":
@@ -53,6 +57,27 @@ def robot(request):
                     post_cancel_nav(host)
     return render(request, 'robot.html', locals())
 
+@csrf_exempt
+def pudu(request):
+    if request.method == "POST":
+        robot_group = get_status_of_robots_in_a_group(device_id,group_id)
+        # 顯示 destList_total
+        destList_total = ""
+        if "order" in request.POST.keys():
+            if request.POST["order"] == "charge":
+                dest = ""
+                for i in range(len(robot_group["data"]["state"])):
+                    robot_id = robot_group["data"]["state"][i]["robotId"]
+                    # call_robot_from_a_destination_on_map(device_id,robot_id,dest,destList_total)
+            if request.POST["order"] == "goback":
+                dest = ""
+                for i in range(len(robot_group["data"]["state"])):
+                    robot_id = robot_group["data"]["state"][i]["robotId"]
+                    call_robot_from_a_destination_on_map(device_id,robot_id,dest,destList_total)
+    return render(request, 'pudu.html', locals())
+@csrf_exempt
+def reeman(request):
+    return render(request, 'reeman.html', locals())
 @csrf_exempt
 def bella(request):
     global name,robot_id,robot_type,dest_list,robot_id,destList_total
