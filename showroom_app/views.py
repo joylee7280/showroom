@@ -30,9 +30,14 @@ def index(request):
 def robot(request):
     if request.method == "POST":
         if "get" in request.POST.keys():
-            now_state = obtain_status_of_robot(device_id,robot_id)
-            now_state = json.loads(now_state)
-            return JsonResponse(now_state, safe=False)
+            if robot_type == "pudu":
+                now_state = obtain_status_of_robot(device_id,robot_id)
+                now_state = json.loads(now_state)
+                return JsonResponse(now_state, safe=False)
+            # 取得狀態
+            elif robot_type == "reeman":
+                now_state = get_nav(host)
+                now_state = json.loads(now_state)
         if "image" in request.POST.keys():
             path = "/static/Image/"+name+".png"
             print(path)
@@ -62,17 +67,25 @@ def pudu(request):
     if request.method == "POST":
         robot_group = get_status_of_robots_in_a_group(device_id,group_id)
         # 顯示 destList_total
-        destList_total = ""
         if "order" in request.POST.keys():
             if request.POST["order"] == "charge":
-                dest = ""
                 for i in range(len(robot_group["data"]["state"])):
                     robot_id = robot_group["data"]["state"][i]["robotId"]
-                    # call_robot_from_a_destination_on_map(device_id,robot_id,dest,destList_total)
+                    destList_total,dest_list = obtain_robot_destination_on_map(device_id,robot_id)
+                    #寫死哪台機器是哪個待機點
+                    if robot_id == "08e9f6cf6c56":
+                        dest = "喵喵充電"
+                    elif robot_id == "08e9f6cf6eee":
+                        dest = "拉拉充電"
+                    call_robot_from_a_destination_on_map(device_id,robot_id,dest,destList_total)
             if request.POST["order"] == "goback":
-                dest = ""
                 for i in range(len(robot_group["data"]["state"])):
                     robot_id = robot_group["data"]["state"][i]["robotId"]
+                    if robot_id == "08e9f6cf6c56":
+                        dest = "喵喵待機"
+                    elif robot_id == "08e9f6cf6eee":
+                        dest = "拉拉待機"
+                    destList_total,dest_list = obtain_robot_destination_on_map(device_id,robot_id)
                     call_robot_from_a_destination_on_map(device_id,robot_id,dest,destList_total)
     return render(request, 'pudu.html', locals())
 @csrf_exempt
@@ -126,7 +139,7 @@ def dog(request):
     name = "dog"
     robot_id = "08e9f6cf6c56"
     robot_type = "reeman"
-    host = robotlist['台北辦公室 | 大狗']+".ros.rmbot.cn"
+    host = robotlist['精浚，飛船']+".ros.rmbot.cn"
     destList_total,dest_list = get_position(host)
     return render(request, 'robot.html', locals())
 

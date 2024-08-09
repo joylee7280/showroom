@@ -93,18 +93,18 @@ def post_cancel_nav(host):
     web =  requests.post("http://"+host+"/cmd/cancel_goal")
     return web.text
 # 獲取導航狀態
-def get_nav():
+def get_nav(host):
     web =  requests.get("http://"+host+"/reeman/nav_status")
-    global nav_status
-    nav_status = json.loads(web.text)
-    print(nav_status)
-    if "res" in nav_status:
-        if(nav_status["res"]==1):
-            state.set("Busy")
-        else:
-            state.set("Free")
-    else:
-       print("false")
+    # global nav_status
+    # nav_status = json.loads(web.text)
+    # print(nav_status)
+    # if "res" in nav_status:
+    #     if(nav_status["res"]==1):
+    #         state.set("Busy")
+    #     else:
+    #         state.set("Free")
+    # else:
+    #    print("false")
     # print(result)
     return web.text
 # 獲取當前導航版本
@@ -115,7 +115,7 @@ def get_version():
 
 
 # 獲取當前模式
-def get_state():
+def get_state(host):
     web = requests.get("http://"+host+"/reeman/get_mode")
     print(web.text)
     return web.text
