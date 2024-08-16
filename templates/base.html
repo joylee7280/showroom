@@ -20,12 +20,11 @@
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
           Pudu
         </button>
-        <!-- 代辦：更新為現在可以偵測到的機器人 -->
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><a class="dropdown-item" href="/pudu">Pudu</a></li>
-          <li><a class="dropdown-item" href="/bella">喵喵</a></li>
-          <li><a class="dropdown-item" href="/pudubot">Pudubot</a></li>
-          <li><a class="dropdown-item" href="/hola">拉拉</a></li>
+        <!-- 代辦：更新為現在可以偵測到的機器人 --> 
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+          {% for r in pudu_robot_list %}
+          <li><a class="dropdown-item pudu_choose" href="/robot" data-name="{{r.name}}">{{r.name}}</a></li>
+          {% endfor %}
         </ul>
     </div>
     <div class="dropdown">
@@ -33,19 +32,68 @@
           Reeman
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-          <li><a class="dropdown-item" href="/reeman">Reeman</a></li>
-          <li><a class="dropdown-item" href="/dog">大狗</a></li>
-          <li><a class="dropdown-item" href="/boat">飛船</a></li>
+          {% for s in reeman_robot_list %}
+          <li><a class="dropdown-item reeman_choose" href="/robot" data-name="{{s.name}}">{{s.name}}</a></li>
+          {% endfor %}
         </ul>
     </div>
   </header>
+
   
   <main>
-    {% block main %}{% endblock %}
+    {% block main %}
+    {% endblock %}
   </main>
-  
+
   <footer>
 
   </footer>
 </body>
+<script>
+  $(function(){
+      $(".pudu_choose").click(function(e){
+          e.preventDefault
+          var formdata = new FormData();
+          var target = $(this).data('name')
+          formdata.append("robot",target)
+          formdata.append("type","pudu")
+          $.ajax({
+              url:"",
+              type:"post",
+              data:formdata,
+              processData:false,
+              contentType:false,
+              success:function(response){
+                  // alert("success")
+              },
+              error:function(){
+                  alert("失敗")
+              }
+
+          })
+      })
+
+      $(".reeman_choose").click(function(e){
+          e.preventDefault
+          var formdata = new FormData();
+          var target = $(this).data('name')
+          formdata.append("robot",target)
+          formdata.append("type","reeman")
+          $.ajax({
+              url:"",
+              type:"post",
+              data:formdata,
+              processData:false,
+              contentType:false,
+              success:function(response){
+                  // alert("success")
+              },
+              error:function(){
+                  alert("失敗")
+              }
+
+          })
+      })
+    })
+</script>
 </html>

@@ -42,32 +42,23 @@ def get_robotlist(token):
     robotlist = {}
     for i in range(0,len(result["data"]["data"])):
         robotlist.setdefault(result["data"]["data"][i]["remark"],result["data"]["data"][i]["urlId"])
-    print(robotlist)
     return robotlist
 
 
-def get_pose():
+def get_pose(host):
     web = requests.get("http://"+host+"/reeman/pose")
-    global pos,reeman_pos
     reeman_pos = json.loads(web.text)
-    reeman_pos["x"] = round(reeman_pos["x"],2)
-    reeman_pos["y"] = round(reeman_pos["y"],2)
-    reeman_pos["theta"] = round(reeman_pos["theta"],2)
-    pos_list = "x:"+str(reeman_pos["x"])+"  y:"+str(reeman_pos["y"])+"  theta:"+str(reeman_pos["theta"])
-    pos.set(pos_list)
-    # print(pos["x"])
-    return web.text
+    pos_list = {"x":reeman_pos["x"],"y":reeman_pos["y"],"angle":reeman_pos["theta"]}
+    return pos_list
 # 獲取電源管理狀態
-def get_power():
+def get_power(host):
     web = requests.get("http://"+host+"/reeman/base_encode")
-    global power
-    power.set(json.loads(web.text)["battery"])
+    power = json.loads(web.text)["battery"]
     charge_result = json.loads(web.text)["chargeFlag"]
     if(charge_result==1):
-        chargestage.set("Idle")
+        return power,"Idle"
     elif(charge_result==2):
-       chargestage.set("Charging")
-    return web.text
+        return power,"Charging"
 def get_position(host):
     web =  requests.get("http://"+host+"/reeman/position")
     result = json.loads(web.text)
@@ -95,18 +86,13 @@ def post_cancel_nav(host):
 # 獲取導航狀態
 def get_nav(host):
     web =  requests.get("http://"+host+"/reeman/nav_status")
-    # global nav_status
-    # nav_status = json.loads(web.text)
-    # print(nav_status)
-    # if "res" in nav_status:
-    #     if(nav_status["res"]==1):
-    #         state.set("Busy")
-    #     else:
-    #         state.set("Free")
-    # else:
-    #    print("false")
-    # print(result)
-    return web.text
+    global nav_status
+    nav_status = json.loads(web.text)["res"]
+    print(nav_status)
+    if(nav_status==1):
+        return("Busy")
+    else:
+        return("Free")
 # 獲取當前導航版本
 def get_version():
     web = requests.get("http://"+host+"/reeman/current_version")

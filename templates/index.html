@@ -4,64 +4,92 @@
 
 {% block main %}
     {% load static %}
-     <!-- PUDU -->
-     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title" align = "center">Bella</h5>
-              <img src="{% static 'Image/bella.png'%}" width = 400 class="card-img-top" alt="...">
-              <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-              <a href="/bella" class="btn btn-primary" align = "center">喵喵</a>
-            </div>
-          </div>
-        </div>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
   
+    <!-- PUDU -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for r in pudu_robot_list %}
         <div class="col">
           <div class="card" style="width: 18rem;">
             <div class="card-body">
-              <h5 class="card-title" align = "center">Pudubot</h5>
-              <img src="{% static 'Image/pudubot2.png'%}" width = 400 class="card-img-top" alt="...">
+              <h5 class="card-title" align = "center">{{r.name}}</h5>
+              <img src="{% static 'Image/'%}/{{r.name}}.png" width = 400 class="card-img-top" alt="...">
               <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-              <a href="/pudubot" class="btn btn-primary" align = "center">Pudubot</a>
+              <a href="/robot" class="btn btn-primary pudu_choose" data-name="{{r.name}}" align = "center">{{r.name}}</a>
+                <!-- <form action="/{{r.name}}">
+                  <input type="submit" class="btn btn-primary" id = "button_choose" value={{r.name}} />
+                </form> -->
             </div>
           </div>
         </div>
+      {% endfor %} 
+    </div>
   
+    <!-- REEMAN -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for s in reeman_robot_list %}
         <div class="col">
           <div class="card" style="width: 18rem;">
             <div class="card-body">
-              <h5 class="card-title" align = "center">Hola</h5>
-              <img src="{% static 'Image/hola.png'%}" width = 400 class="card-img-top" alt="...">
+              <h5 class="card-title" align = "center">{{s.name}}</h5>
+              <img src="{% static 'Image/'%}/{{s.name}}.png" width = 400 class="card-img-top" alt="...">
               <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-              <a href="/hola" class="btn btn-primary" align = "center">拉拉</a>
+              <a href="/robot" class="btn btn-primary reeman_choose" data-name="{{s.name}}" align = "center">{{s.name}}</a>
             </div>
           </div>
         </div>
-      </div>
-  
-      <!-- REEMAN -->
-      <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title" align = "center">飛船</h5>
-              <img src="{% static 'Image/boat.png'%}" width = 400 class="card-img-top" alt="...">
-              <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-              <a href="/boat" class="btn btn-primary" align = "center">飛船</a>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col">
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title" align = "center">大狗</h5>
-              <img src="{% static 'Image/dog.png'%}" width = 400 class="card-img-top" alt="...">
-              <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-              <a href="/dog" class="btn btn-primary" align = "center">大狗</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
+
+      <script>
+        $(function(){
+            $(".pudu_choose").click(function(e){
+                e.preventDefault
+                var formdata = new FormData();
+                var target = $(this).data('name')
+                formdata.append("robot",target)
+                formdata.append("type","pudu")
+                $.ajax({
+                    url:"/robot/",
+                    type:"post",
+                    data:formdata,
+                    processData:false,
+                    contentType:false,
+                    success:function(response){
+                        // alert("success")
+                    },
+                    error:function(){
+                        alert("失敗")
+                    }
+
+                })
+            })
+
+            $(".reeman_choose").click(function(e){
+                e.preventDefault
+                var formdata = new FormData();
+                var target = $(this).data('name')
+                formdata.append("robot",target)
+                formdata.append("type","reeman")
+                $.ajax({
+                    url:"/robot/",
+                    type:"post",
+                    data:formdata,
+                    processData:false,
+                    contentType:false,
+                    success:function(response){
+                        // alert("success")
+                    },
+                    error:function(){
+                        alert("失敗")
+                    }
+
+                })
+            })
+          })
+      </script>
+    </body>
+
 {% endblock %}

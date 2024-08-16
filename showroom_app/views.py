@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse,Http404,JsonResponse
 from datetime import datetime
-from showroom_app.models import student
+from showroom_app.models import pudu_robot,reeman_robot
 from django.contrib import auth
 from showroom_app.reeman_function import *
 from showroom_app.pudu_function import *
@@ -12,36 +12,75 @@ group_id = "Z8Qp8N4sjgZyshhuJLmdz"
 deviceSecret = "deviceSecret"
 region = "ap-southeast-1"
 # Create your views here.
-def home(request):
-    return HttpResponse("Home page")
 
 @csrf_exempt
 def index(request):
-    pageTitle="子網頁繼承"
-    mainTitle="段落標題"
-    mainContent="段落內文"
-    # artitle1={"aTitle":"文章標題","aContent":"文章1內文"}
-    # artitle2={"aTitle":"文章標題","aContent":"文章2內文"}
-    # artitles=[artitle1, artitle2]
+    global name,robot_id,robot_type,host
+    pudu_robot_list = pudu_robot.objects.all()
+    reeman_robot_list = reeman_robot.objects.all()
+    print(pudu_robot_list)
+    print(reeman_robot_list)
+    if request.method == "POST":
+        # 哪個機器人
+        if "type" in request.POST.keys():
+            if request.POST["type"] == "pudu":
+                robot_type = request.POST["type"]
+                name = request.POST["robot"]
+                robot_id = pudu_robot.objects.get(name=name).robotid
+            elif request.POST["type"] == "reeman":
+                robot_type = request.POST["type"]
+                name = request.POST["robot"]
+                robotlist = get_robotlist(get_token())
+                host = robotlist[reeman_robot.objects.get(name=name).host_name]
+                host = host+".ros.rmbot.cn"
     return render(request, 'index.html', locals())
-
 
 @csrf_exempt
 def robot(request):
+    pudu_robot_list = pudu_robot.objects.all()
+    reeman_robot_list = reeman_robot.objects.all()
+    global name,robot_id,robot_type,host
+    if robot_type == "pudu":
+        destList_total,dest_list = obtain_robot_destination_on_map(device_id,robot_id)
+    elif robot_type == "reeman":
+        destList_total,dest_list = get_position(host)
+    robot_name = name
     if request.method == "POST":
+        # 哪個機器人
+        if "type" in request.POST.keys():
+            if request.POST["type"] == "pudu":
+                robot_type = request.POST["type"]
+                name = request.POST["robot"]
+                robot_id = pudu_robot.objects.get(name=name).robotid
+                destList_total,dest_list = obtain_robot_destination_on_map(device_id,robot_id)
+                print(dest_list)
+            elif request.POST["type"] == "reeman":
+                robot_type = request.POST["type"]
+                name = request.POST["robot"]
+                robotlist = get_robotlist(get_token())
+                host = robotlist[reeman_robot.objects.get(name=name).host_name]
+                host = host+".ros.rmbot.cn"
+                destList_total,dest_list = get_position(host)
+                print(dest_list)
+            robot_name = name
+        # 取得狀態
         if "get" in request.POST.keys():
             if robot_type == "pudu":
                 now_state = obtain_status_of_robot(device_id,robot_id)
                 now_state = json.loads(now_state)
-                return JsonResponse(now_state, safe=False)
-            # 取得狀態
+                return JsonResponse(now_state["data"], safe=False)
             elif robot_type == "reeman":
-                now_state = get_nav(host)
-                now_state = json.loads(now_state)
+                power,chargeStage = get_power(host)
+                robotState = get_nav(host)
+                robotPose = get_pose(host)
+                now_state = {"robotState":robotState,"robotPower":power,"chargeStage":chargeStage,"robotPose":robotPose}
+                return JsonResponse(now_state, safe=False)
+        # 圖片
         if "image" in request.POST.keys():
             path = "/static/Image/"+name+".png"
             print(path)
             return HttpResponse(path)
+        # 命令：抵達目的、充電、返航
         if "order" in request.POST.keys():
             dest = request.POST["dest"]
             if robot_type == "pudu":
@@ -64,6 +103,8 @@ def robot(request):
 
 @csrf_exempt
 def pudu(request):
+    al = pudu_robot.objects.all()
+    print(al)
     if request.method == "POST":
         robot_group = get_status_of_robots_in_a_group(device_id,group_id)
         # 顯示 destList_total
@@ -88,64 +129,26 @@ def pudu(request):
                     destList_total,dest_list = obtain_robot_destination_on_map(device_id,robot_id)
                     call_robot_from_a_destination_on_map(device_id,robot_id,dest,destList_total)
     return render(request, 'pudu.html', locals())
+    
 @csrf_exempt
 def reeman(request):
-    return render(request, 'reeman.html', locals())
-@csrf_exempt
-def bella(request):
-    global name,robot_id,robot_type,dest_list,robot_id,destList_total
-    name = "bella"
-    robot_id = "08e9f6cf6c56"
-    robot_type = "pudu"
-    destList_total,dest_list = obtain_robot_destination_on_map(device_id,robot_id)
-    return render(request, 'robot.html', globals())
-
-@csrf_exempt
-def hola(request):
-    global name,robot_id,robot_type,dest_list,robot_id,destList_total
-    name = "hola"
-    robot_id = "08e9f6cf6eee"
-    robot_type = "pudu"
-    destList_total,dest_list = obtain_robot_destination_on_map(device_id,robot_id)
-    return render(request, 'robot.html', globals())
-
-@csrf_exempt
-def pudubot(request):
-    global name,robot_id,robot_type,dest_list,robot_id,destList_total
-    name = "pudubot2"
-    robot_id = "b4edd5756f42"
-    robot_type = "pudu"
-    destList_total,dest_list = obtain_robot_destination_on_map(device_id,robot_id)
-    return render(request, 'robot.html', globals())
-
-@csrf_exempt
-def boat(request):
-    global name,robot_id,robot_type,dest_list,robot_id,destList_total,host
-    robotlist = get_robotlist(get_token())
-    print(".............")
-    print(type(robotlist))
-    name = "boat"
-    robot_id = "08e9f6cf6c56"
-    robot_type = "reeman"
-    host = robotlist['台北辦公室 | 大狗']+".ros.rmbot.cn"
-    get_position(host)
-    destList_total,dest_list = get_position(host)
-    return render(request, 'robot.html', locals())
-
-@csrf_exempt
-def dog(request):
-    global name,robot_id,robot_type,dest_list,robot_id,destList_total,host
-    robotlist = get_robotlist(get_token())
-    name = "dog"
-    robot_id = "08e9f6cf6c56"
-    robot_type = "reeman"
-    host = robotlist['精浚，飛船']+".ros.rmbot.cn"
-    destList_total,dest_list = get_position(host)
-    return render(request, 'robot.html', locals())
-
-@csrf_exempt
-def hiname(request, username):
-    return HttpResponse("Hi "+username)
+    if request.method == "POST":
+        robotlist = get_robotlist(get_token())
+        # 顯示 destList_total
+        if "order" in request.POST.keys():
+            if request.POST["order"] == "charge":
+                for i in range(len(robotlist)):
+                    host = robotlist+".ros.rmbot.cn"
+                    destList_total,dest_list = get_position(host)
+                    dest = "充電站"
+                    post_destname(dest)
+            if request.POST["order"] == "goback":
+                for i in robotlist.values:
+                    host = i+".ros.rmbot.cn"
+                    destList_total,dest_list = get_position(host)
+                    dest = "充電站"
+                    post_destname(dest)
+    return render(request, 'pudu.html', locals())
 
 @csrf_exempt
 def getOneByName(request, username):
