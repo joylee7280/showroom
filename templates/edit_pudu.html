@@ -1,0 +1,86 @@
+<!-- 未完成-->
+{% extends 'base.html'%}
+{% block title %}{% endblock %}
+{% block main %}
+{% load static %}
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <!-- PUDU -->
+    <div>
+        {% csrf_token %}
+        <label for="robot_name">
+            <h4 style="color:gray">robot_name：</h4>
+        </label>
+        <input type="text" id="robot_name" name="robot_name">
+        <br />
+        <label for="robot_id">
+            <h4 style="color:gray">robot_id：</h4>
+        </label>
+        <input type="text" id="robot_id" name="robot_id">
+        <br />
+        <label for="wait_point">
+            <h4 style="color:gray">wait_point：</h4>
+        </label>
+        <input type="text" id="wait_point" name="wait_point">
+        <br />
+        <label for="charge_point">
+            <h4 style="color:gray">charge_point：</h4>
+        </label>
+        <input type="text" id="charge_point" name="charge_point">
+        <br />
+
+        <script>
+            $(function () {
+                $(".pudu_choose").click(function (e) {
+                    e.preventDefault
+                    var formdata = new FormData();
+                    var target = $(this).data('name')
+                    formdata.append("robot", target)
+                    formdata.append("type", "pudu")
+                    $.ajax({
+                        url: "/robot/",
+                        type: "post",
+                        data: formdata,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+
+                        },
+                        error: function () {
+                            alert("失敗")
+                        }
+
+                    })
+                })
+
+                $(".reeman_choose").click(function (e) {
+                    e.preventDefault
+                    var formdata = new FormData();
+                    var target = $(this).data('name')
+                    formdata.append("robot", target)
+                    formdata.append("type", "reeman")
+                    $.ajax({
+                        url: "/robot/",
+                        type: "post",
+                        data: formdata,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                        },
+                        error: function () {
+                            alert("失敗")
+                        }
+
+                    })
+                })
+            })
+        </script>
+
+</body>
+
+{% endblock %}

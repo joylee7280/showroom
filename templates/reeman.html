@@ -1,66 +1,98 @@
+<!-- 控制 reeman 機器人的網頁 -->
 {% extends "base.html"%}
 
 {% block title %}{{name}}{% endblock %}
 
 {% block main %}
 {% load static %}
+
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
-<body>
-    <!-- <p>喵喵</p> -->
-    
-    <!-- 設定圖片 -->
-<span>
-    <img src="{% static 'Image/dog.png'%}" width = 200>
-    <img src="{% static 'Image/boat.png'%}" width = 200>
-</span>
-<span>
-    <input type = "button" id = "button_goback" value = "返航">
-    <input type = "button" id = "button_charge" value = "充電">
 
-</span>
+<body>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for s in reeman_robot_list %}
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title" align="center">{{s.name}}</h5>
+                    <img src="{% static 'Image/'%}/{{s.name}}.png" width=400 class="card-img-top" alt="...">
+                    <a href="/robot" class="btn btn-primary reeman_choose" data-name="{{s.name}}"
+                        align="center">{{s.name}}</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <span>
+            <input type="button" id="button_goback" value="返航">
+            <input type="button" id="button_charge" value="充電">
+        </span>
+    </div>
     <script>
-        $(function(){
-            $("#button_goback").click(function(e){
+        $(function () {
+            $(".reeman_choose").click(function (e) {
                 e.preventDefault
                 var formdata = new FormData();
-                formdata.append("order","goback")
+                var target = $(this).data('name')
+                formdata.append("robot", target)
+                formdata.append("type", "reeman")
                 $.ajax({
-                    url:"/reeman/",
-                    type:"post",
-                    data:formdata,
-                    processData:false,
-                    contentType:false,
-                    success:function(response){
+                    url: "/robot/",
+                    type: "post",
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
                         // alert("success")
                     },
-                    error:function(){
+                    error: function () {
                         alert("失敗")
                     }
 
                 })
             })
 
-            $("#button_charge").click(function(e){
+            $("#button_goback").click(function (e) {
                 e.preventDefault
                 var formdata = new FormData();
-                formdata.append("order","charge")
+                formdata.append("order", "goback")
                 $.ajax({
-                    url:"/reeman/",
-                    type:"post",
-                    data:formdata,
-                    processData:false,
-                    contentType:false,
-                    success:function(response){
+                    url: "/reeman/",
+                    type: "post",
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
                         // alert("success")
                     },
-                    error:function(){
+                    error: function () {
                         alert("失敗")
                     }
 
                 })
-            })    
+            })
+
+            $("#button_charge").click(function (e) {
+                e.preventDefault
+                var formdata = new FormData();
+                formdata.append("order", "charge")
+                $.ajax({
+                    url: "/reeman/",
+                    type: "post",
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        // alert("success")
+                    },
+                    error: function () {
+                        alert("失敗")
+                    }
+
+                })
+            })
         })
     </script>
 </body>

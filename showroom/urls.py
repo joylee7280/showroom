@@ -21,7 +21,8 @@ from showroom_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
-    path('robot/',views.robot),
-    # path('pudu/',views.pudu),
-    # path('reeman',views.reeman),
+    path('robot/', views.robot),
+    path('pudu/', views.pudu),
+    # path('edit_pudu/', views.edit_pudu),
+    path('reeman/', views.reeman),
 ]

@@ -1,45 +1,74 @@
+<!-- 主頁面 -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- css -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   {% load static %}
   <link href="{% static 'css/style.css'%}" rel="stylesheet">
   <title>{% block title %}{% endblock %}</title>
 </head>
+
 <body>
   <!-- js -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+    crossorigin="anonymous"></script>
   <header>
     <h1>Aurotek showroom</h1>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          Pudu
-        </button>
-        <!-- 代辦：更新為現在可以偵測到的機器人 --> 
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-          {% for r in pudu_robot_list %}
-          <li><a class="dropdown-item pudu_choose" href="/robot" data-name="{{r.name}}">{{r.name}}</a></li>
-          {% endfor %}
-        </ul>
+    <div>
+      <a class="btn btn-secondary" href="/">回首頁</a>
     </div>
     <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-          Reeman
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-          {% for s in reeman_robot_list %}
-          <li><a class="dropdown-item reeman_choose" href="/robot" data-name="{{s.name}}">{{s.name}}</a></li>
-          {% endfor %}
-        </ul>
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        Pudu
+      </button>
+      <!-- 代辦：更新為現在可以偵測到的機器人 -->
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+        <a class="dropdown-item pudu_choose" href="/pudu" data-name="pudu">pudu</a>
+        {% for r in pudu_robot_list %}
+        <li><a class="dropdown-item pudu_choose" href="/robot" data-name="{{r.name}}">{{r.name}}</a></li>
+        {% endfor %}
+        <li><button class="dropdown-item" id=add_image>add image</button>
+      </ul>
+    </div>
+    <div class=" dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        Reeman
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+        <a class="dropdown-item pudu_choose" href="/reeman" data-name="reeman">reeman</a>
+        {% for s in reeman_robot_list %}
+        <li><a class="dropdown-item reeman_choose" href="/robot" data-name="{{s.name}}">{{s.name}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Modal header</h3>
+      </div>
+      <div class="modal-body">
+        <p>One fine body…</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary">Save changes</button>
+      </div>
     </div>
   </header>
 
-  
+
   <main>
     {% block main %}
     {% endblock %}
@@ -50,50 +79,57 @@
   </footer>
 </body>
 <script>
-  $(function(){
-      $(".pudu_choose").click(function(e){
-          e.preventDefault
-          var formdata = new FormData();
-          var target = $(this).data('name')
-          formdata.append("robot",target)
-          formdata.append("type","pudu")
-          $.ajax({
-              url:"",
-              type:"post",
-              data:formdata,
-              processData:false,
-              contentType:false,
-              success:function(response){
-                  // alert("success")
-              },
-              error:function(){
-                  alert("失敗")
-              }
+  $(function () {
 
-          })
-      })
+  })
+  $("#add_image").click(function (e) {
+    $('#myModal').show()
 
-      $(".reeman_choose").click(function(e){
-          e.preventDefault
-          var formdata = new FormData();
-          var target = $(this).data('name')
-          formdata.append("robot",target)
-          formdata.append("type","reeman")
-          $.ajax({
-              url:"",
-              type:"post",
-              data:formdata,
-              processData:false,
-              contentType:false,
-              success:function(response){
-                  // alert("success")
-              },
-              error:function(){
-                  alert("失敗")
-              }
+  })
+  $(".pudu_choose").click(function (e) {
+    e.preventDefault
+    var formdata = new FormData();
+    var target = $(this).data('name')
+    formdata.append("robot", target)
+    formdata.append("type", "pudu")
+    $.ajax({
+      url: "/robot/",
+      type: "post",
+      data: formdata,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // alert("success")
+      },
+      error: function () {
+        alert("失敗")
+      }
 
-          })
-      })
     })
+  })
+
+  $(".reeman_choose").click(function (e) {
+    e.preventDefault
+    var formdata = new FormData();
+    var target = $(this).data('name')
+    formdata.append("robot", target)
+    formdata.append("type", "reeman")
+    $.ajax({
+      url: "/robot/",
+      type: "post",
+      data: formdata,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // alert("success")
+      },
+      error: function () {
+        alert("失敗")
+      }
+
+    })
+  })
+
 </script>
+
 </html>

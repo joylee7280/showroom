@@ -1,95 +1,89 @@
+<!-- 繼承 base.html 的進入網頁 -->
 {% extends 'base.html'%}
-
-{% block title %}{{pageTitle}}{% endblock %}
-
+{% block title %}{% endblock %}
 {% block main %}
-    {% load static %}
+{% load static %}
+
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
+
 <body>
-  
-    <!-- PUDU -->
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      {% for r in pudu_robot_list %}
-        <div class="col">
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title" align = "center">{{r.name}}</h5>
-              <img src="{% static 'Image/'%}/{{r.name}}.png" width = 400 class="card-img-top" alt="...">
-              <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-              <a href="/robot" class="btn btn-primary pudu_choose" data-name="{{r.name}}" align = "center">{{r.name}}</a>
-                <!-- <form action="/{{r.name}}">
-                  <input type="submit" class="btn btn-primary" id = "button_choose" value={{r.name}} />
-                </form> -->
-            </div>
-          </div>
+
+  <!-- PUDU -->
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for r in pudu_robot_list %}
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title" align="center">{{r.name}}</h5>
+          <img src="{% static 'Image/'%}/{{r.name}}.png" width=400 class="card-img-top" alt="...">
+          <a href="/robot" class="btn btn-primary pudu_choose" data-name="{{r.name}}" align="center">{{r.name}}</a>
         </div>
-      {% endfor %} 
+      </div>
     </div>
-  
-    <!-- REEMAN -->
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      {% for s in reeman_robot_list %}
-        <div class="col">
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title" align = "center">{{s.name}}</h5>
-              <img src="{% static 'Image/'%}/{{s.name}}.png" width = 400 class="card-img-top" alt="...">
-              <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-              <a href="/robot" class="btn btn-primary reeman_choose" data-name="{{s.name}}" align = "center">{{s.name}}</a>
-            </div>
-          </div>
+    {% endfor %}
+  </div>
+  <!-- REEMAN -->
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for s in reeman_robot_list %}
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title" align="center">{{s.name}}</h5>
+          <img src="{% static 'Image/'%}/{{s.name}}.png" width=400 class="card-img-top" alt="...">
+          <a href="/robot" class="btn btn-primary reeman_choose" data-name="{{s.name}}" align="center">{{s.name}}</a>
         </div>
-      {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <script>
+    $(function () {
+      $(".pudu_choose").click(function (e) {
+        e.preventDefault
+        var formdata = new FormData();
+        var target = $(this).data('name')
+        formdata.append("robot", target)
+        formdata.append("type", "pudu")
+        $.ajax({
+          url: "/robot/",
+          type: "post",
+          data: formdata,
+          processData: false,
+          contentType: false,
+          success: function (response) {
 
-      <script>
-        $(function(){
-            $(".pudu_choose").click(function(e){
-                e.preventDefault
-                var formdata = new FormData();
-                var target = $(this).data('name')
-                formdata.append("robot",target)
-                formdata.append("type","pudu")
-                $.ajax({
-                    url:"/robot/",
-                    type:"post",
-                    data:formdata,
-                    processData:false,
-                    contentType:false,
-                    success:function(response){
-                        // alert("success")
-                    },
-                    error:function(){
-                        alert("失敗")
-                    }
+          },
+          error: function () {
+            alert("失敗")
+          }
 
-                })
-            })
+        })
+      })
 
-            $(".reeman_choose").click(function(e){
-                e.preventDefault
-                var formdata = new FormData();
-                var target = $(this).data('name')
-                formdata.append("robot",target)
-                formdata.append("type","reeman")
-                $.ajax({
-                    url:"/robot/",
-                    type:"post",
-                    data:formdata,
-                    processData:false,
-                    contentType:false,
-                    success:function(response){
-                        // alert("success")
-                    },
-                    error:function(){
-                        alert("失敗")
-                    }
+      $(".reeman_choose").click(function (e) {
+        e.preventDefault
+        var formdata = new FormData();
+        var target = $(this).data('name')
+        formdata.append("robot", target)
+        formdata.append("type", "reeman")
+        $.ajax({
+          url: "/robot/",
+          type: "post",
+          data: formdata,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+          },
+          error: function () {
+            alert("失敗")
+          }
 
-                })
-            })
-          })
-      </script>
-    </body>
+        })
+      })
+    })
+  </script>
+</body>
 
 {% endblock %}
